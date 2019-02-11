@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+
+{% block header %}
+<h1>{% block title %}Spots{% endblock %}</h1>
+{% if g.user %}
+<a class='action' href= "{{ url_for('blog.create') }}">New</a>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+{% for spot in spots %}
+<article class = "post">
+	<header>
+		<div>
+			<h2>{{ spot['created'].strftime('%Y-%m-%d') }}</h2>
+			<div class='about'>{{ post['lat'] }}, {{ post ['long'] }}</div>
+		</div>
+		{% if g.user['id']} == post['author_id'] %}
+		<a class='action' href="{{ url_for('blog.update', id=post['id']) }}">Edit</a>
+		{% endif %}
+	</header>
+	<p class='body'>{{ post['note'] }}</p>
+</article>
+{% if not loop.last %}
+<hr>
+{% endif %}
+{% endfor %}
+{% endblock %}
+
