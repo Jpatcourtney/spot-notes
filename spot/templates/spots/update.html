@@ -1,1 +1,17 @@
+{% extends 'base.html' %}
 
+{% block header %}
+	<h1>{% block title %}Edit Spot{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+	<form method='post'>
+		<label for='note'>Notes</label>
+		<textarea name='note' id='note'>'{{ request.form["note"] or spot['note']  }}'</textarea>
+		<input type='submit' value='Save It'>
+	</form>
+	<hr>
+	<form action="{{ url_for('spots.delete', id=spot['id']) }}" method='post'>
+		<input class="danger" type='submit' value='Delete' onclick="return confirm('For Sure?');">
+	</form>
+{% endblock %}

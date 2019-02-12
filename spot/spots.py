@@ -11,9 +11,10 @@ bp = Blueprint('spots', __name__)
 def index():
 	db = get_db()
 	spots = db.execute(
-		"SELECT s.id, note, created, lat, long, author_id, username"
-		" FROM spot s JOIN user u ON p.author_id = u.id"
-		" ORDER BY created DESC").fetchall()
+		"SELECT p.id, note, created, lat, long, author_id, username"
+		" FROM spot p JOIN user u ON p.author_id = u.id"
+		" ORDER BY created DESC"
+	).fetchall()
 	return render_template('spots/index.html', spots=spots)
 
 @bp.route('/create', methods=('GET', 'POST'))
@@ -41,7 +42,7 @@ def create():
 def get_spot(id, check_author=True):
 	spot = get_db().execute(
 		'SELECT p.id, note, created, author_id, username'
-		' FROM spot p JOIN user ON p.author_id = u.id'
+		' FROM spot p JOIN user u ON p.author_id = u.id'
 		' WHERE p.id = ?',
 		(id,)
 	).fetchone()
@@ -54,7 +55,7 @@ def get_spot(id, check_author=True):
 
 	return spot
 
-@bp.route('/<int:id>/update', methods('GET', 'POST'))
+@bp.route('/<int:id>/update', methods=('GET', 'POST'))
 @login_required
 def update(id):
 	spot = get_spot(id)
@@ -63,23 +64,31 @@ def update(id):
 		note = request.form['note']
 		error = None
 
-	if not note:
-		error = 'A note is required'
+		if not note:
+			error = 'A note is required'
 
-	if error is not Note:
-		flash(error)
-	else:
-		db = get_db()
-		db.execute(
-			'UPDATE spot SET note = ?'
-			' WHERE id = ?',
-			(note, id)
-		)
-		db.commit()
-		return redirect(url_for('spots.index'))
+		if error is not None:
+			flash(error)
+		else:
+			db = get_db()
+			db.execute(
+				'UPDATE spot SET note = ?'
+				' WHERE id = ?',
+				(note, id)
+			)
+			db.commit()
+			return redirect(url_for('spots.index'))
 
 	return render_template('spots/update.html', spot=spot)
 
+@bp.route('/<int:id>/delete', methods=("POST",))
+@login_required
+def delete(id):
+	get_spot(id)
+	db = get_db()
+	db.execute('DELETE FROM spot WHERE id = ?', (id,))
+	db.commit()
+	return redirect(url_for('spots.index'))
 
 
 

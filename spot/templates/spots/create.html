@@ -7,11 +7,7 @@
 {% block content %}
 	<form method='post'>
 		<label for='note'>Notes</label>
-		<textarea name='note' id='note'>'{{ request.form["note"] or spot['note'] }}</textarea>
+		<textarea name='note' id='note'>'{{ request.form["note"] }}</textarea>
 		<input type='submit' value='Save This'>
-	</form>
-	<hr>
-	<form action="{{ url_for('blog.delete', id=post['id']) }}" method='post'>
-		<input class="danger" type='submit' value='Delete' onclick="return confirm('For Sure?');">
 	</form>
 {% endblock %}

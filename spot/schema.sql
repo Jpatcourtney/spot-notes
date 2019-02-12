@@ -12,7 +12,7 @@ CREATE TABLE spot (
   author_id INTEGER NOT NULL,
   created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   note TEXT NOT NULL,
-  lat REAL NOT NULL,
-  long REAL NOT NULL,
+  lat REAL,
+  long REAL,
   FOREIGN KEY (author_id) REFERENCES user (id)
 );

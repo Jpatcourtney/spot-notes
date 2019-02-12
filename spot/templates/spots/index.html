@@ -4,7 +4,7 @@
 {% block header %}
 <h1>{% block title %}Spots{% endblock %}</h1>
 {% if g.user %}
-<a class='action' href= "{{ url_for('blog.create') }}">New</a>
+<a class='action' href= "{{ url_for('spots.create') }}">New</a>
 {% endif %}
 {% endblock %}
 
@@ -13,14 +13,14 @@
 <article class = "post">
 	<header>
 		<div>
-			<h2>{{ spot['created'].strftime('%Y-%m-%d') }}</h2>
-			<div class='about'>{{ post['lat'] }}, {{ post ['long'] }}</div>
+			<h2>{{ spot['created'].strftime('%Y-%m-%d  %H:%M') }}</h2>
+			<div class='about'>{{ spot['lat'] }}, {{ spot['long'] }}</div>
 		</div>
-		{% if g.user['id']} == post['author_id'] %}
-		<a class='action' href="{{ url_for('blog.update', id=post['id']) }}">Edit</a>
+		{% if g.user['id'] == spot['author_id'] %}
+		<a class='action' href="{{ url_for('spots.update', id=spot['id']) }}">Edit</a>
 		{% endif %}
 	</header>
-	<p class='body'>{{ post['note'] }}</p>
+	<p class='body'>{{ spot['note'] }}</p>
 </article>
 {% if not loop.last %}
 <hr>

@@ -1,0 +1,4 @@
+include spot/schema.sql
+graft spot/static
+graf spot/templates
+global-exclude *.pyc
