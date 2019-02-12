@@ -26,7 +26,7 @@ def create_app(test_config=None):
 	# hello page
 	@app.route('/hello')
 	def hello():
-		return 'Hello Tampa! and the world World!'
+		return 'Hello World!'
 
 	from . import db
 	db.init_app(app)

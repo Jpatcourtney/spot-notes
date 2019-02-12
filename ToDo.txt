@@ -1,0 +1,4 @@
+ToDo:
++ Add location tracking and populate lat / long
++ Localize the time of the posts
+
