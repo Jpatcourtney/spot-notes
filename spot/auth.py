@@ -7,6 +7,14 @@ from spot.db import get_db
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
+#########
+#       #
+# VIEWS #
+#       #
+#########
+
+# Get renders template
+# Post validates data/ Inserts U & Hashed P. Redirects to Login 
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
 	if request.method == 'POST':
@@ -33,6 +41,8 @@ def register():
 	return render_template('auth/register.html')
 
 
+# Get renders template
+# Post Selects username. Checks password. Sets session user-id. Redirects Index.
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
 	if request.method == 'POST':
@@ -56,7 +66,13 @@ def login():
 
 	return render_template('auth/login.html')
 
+# Clears session and redirects to index.
+@bp.route('/logout')
+def logout():
+	session.clear()
+	return redirect(url_for('index'))
 
+# Selects user record defines g.user.
 @bp.before_app_request
 def load_logged_in_user():
 	user_id = session.get('user_id')
@@ -67,11 +83,7 @@ def load_logged_in_user():
 		g.user = get_db().execute(
 			'SELECT * FROM user WHERE id = ?',(user_id,)).fetchone()
 
-@bp.route('/logout')
-def logout():
-	session.clear()
-	return redirect(url_for('index'))
-
+# Decorator that checks for g.user. Use to restrict access to views.
 def login_required(view):
 	@functools.wraps(view)
 	def wrapped_view(**kwargs):

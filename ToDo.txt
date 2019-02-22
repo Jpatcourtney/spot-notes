@@ -1,4 +1,34 @@
-ToDo:
-+ Add location tracking and populate lat / long
-+ Localize the time of the posts
+
++ Index (Logged In)
+	Map View
+	Show spots on a map
+	Center map with 6-8 view of current location 
+
++ Style Index (Logged In)
+	Simple white and gray map.
+	Spots are Teal disks
+	How do we give each spot more info and a link? 
+
++ Style Login
+	Materialize the form
+
++ Style Register
+	Materialize the form
+
++ Live on the web
+	Get everything cleaned up and push it live.
+	Want to start using it to record notes.
+
++ Design the database for next steps
+	What do I actually want to build here and what will the database look like?
+	How are we going to incorporate more data?
+	Saving Google map image to database for spot records
+
++ Tags
+	How can we implement tags into the notes?
+	When writting notes, tag words would automatically be found
+
++ Database Update
+	Don't pull the static map image from Google every time.
+	Pull it once and save it with the note record.
 

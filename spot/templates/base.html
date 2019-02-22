@@ -1,22 +1,63 @@
+<!--
+Nav for User and Visitor
+Place for flashed messages
+Content block
+-->
+
 <!doctype html>
-<title>{% block title %}{% endblock %} | Spot Notes</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-<nav>
-	<h1>SpotNotes</h1>
-	<ul>
-		{% if g.user %}
-		<li><span>{{ g.user['username'] }}</span>
-		<li><a href="{{ url_for('auth.logout') }}">Log Out</a>
-		{% else %}
-		<li><a href="{{ url_for('auth.register') }}">Register</a>
-		<li><a href="{{ url_for('auth.login') }}">Log In</a>
-		{% endif %}
-	</ul>
-</nav>
-<section class="contents">
-	<header>{% block header %}{% endblock %}</header>
-	{% for message in get_flashed_messages() %}
-	<div class="flash">{{ message }}</div>
-	{% endfor %}
-	{% block content %}{% endblock %}
-</section>
+<html>	
+	<head>
+
+		<title>{% block title %}{% endblock %} | Spot Notes</title>
+		<!--Import Google Icon Font-->
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<!--Materialize CSS and custom CSS-->
+		<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='materialize.css') }}">
+		<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+		<!--Let browser know website is optimized for mobile-->
+      	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+      	{% block header %}{% endblock %}
+	</head>
+	<body>
+		<header>
+			<nav>
+				<div class='nav-wrapper'>
+					{% if g.user %}
+					<a href="{{ url_for('spots.index') }}" class='brand-logo'>SpotNotes</a>
+					{% block addbutton %}{% endblock %}
+					{% else %}
+					<a href="{{ url_for('spots.spots') }}" class='left brand-logo'>SpotNotes</a>
+					<ul id='nav-mobile' class='right'>
+						<li><a href="{{ url_for('auth.register') }}">Register</a></li>
+						<li><a href="{{ url_for('auth.login') }}">Login</a></li>
+					</ul>
+					{% endif %}
+				</div>
+			</nav>
+		</header>
+		<main>
+				{% for message in get_flashed_messages() %}
+				<div class="flash">{{ message }}</div>
+				{% endfor %}
+				<div class='container'>
+				{% block content %}{% endblock %}
+				</div>
+		</main>
+		<footer class='page-footer'>
+			<div class='container center-align'>
+				<a href='{{ url_for("spots.spots") }}'>
+					<h5 class='white-text'>List</h5>
+				</a>
+			</div>	
+			<div class="footer-copyright">
+			        <div class='container'>© 2019 SpotNotes</div>
+			        <div class='container right-align right'>
+			        	<a href="{{ url_for('auth.logout') }}" class='white-text'>Log Out</a>
+			        </div>
+			    </div>
+		</footer>
+		<!--Materialize JS and custome JS-->
+		<script src="{{ url_for('static',filename='materialize.js') }}"></script>
+		<script src="{{ url_for('static', filename='scripts.js') }}"></script>
+	</body>
+</html>

@@ -1,17 +1,38 @@
+
+<!-- 
+Form populates value in note field with existing note
+Delete button uses class "danger" to alert user before deleting
+-->
 {% extends 'base.html' %}
 
-{% block header %}
-	<h1>{% block title %}Edit Spot{% endblock %}</h1>
-{% endblock %}
-
 {% block content %}
-	<form method='post'>
-		<label for='note'>Notes</label>
-		<textarea name='note' id='note'>'{{ request.form["note"] or spot['note']  }}'</textarea>
-		<input type='submit' value='Save It'>
+<br>
+<br>
+<div class='row'>
+  <div class='col s12'>
+    <div class='card-panel'>
+      <div class='row'>
+        <form method='post' class='col s12'>
+          <div class='row'>
+            <div class='input-field col s12'>
+            	<textarea 
+                name='note' 
+                id='note' 
+                class='materialize-textarea'
+                autofocus="autofocus">{{ request.form["note"] or spot['note']  }}</textarea>
+            </div>
+          	<button type='submit' class='btn waves-effect waves-light center'>Done</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<div class='right'>
+    <form action="{{ url_for('spots.delete', id=spot['id']) }}" method='post'>
+		<button class="danger red-text waves-effect waves-red btn-flat" type='submit' value='Delete' onclick="return confirm('You for sure want to delete this?');">Delete</button>
 	</form>
-	<hr>
-	<form action="{{ url_for('spots.delete', id=spot['id']) }}" method='post'>
-		<input class="danger" type='submit' value='Delete' onclick="return confirm('For Sure?');">
-	</form>
+</div>
+<br>
+<br>
 {% endblock %}

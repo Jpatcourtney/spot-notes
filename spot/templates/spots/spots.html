@@ -1,0 +1,26 @@
+
+<!-- 
+Loops through list of spots
+-->
+{% extends 'base.html' %}
+
+{% block addbutton %}
+<a id='add-btn' href="{{ url_for('spots.create') }}" class="btn-floating btn-large halfway-fab waves-effect waves-light z-depth-3">
+	<i class="material-icons">add</i>
+</a>
+{% endblock %}
+
+{% block content %}
+<br>
+<br>
+<div class="collection">
+{% for spot in spots %}
+	<a href="{{ url_for('spots.spot', id=spot['id']) }}" class="collection-item">
+      <span class="title"><h5>{{ spot['note'] }}</h5></span>
+      <p>{{ spot['local_time'].strftime('%m/%d/%Y  %I:%M %p') }}</p>
+    </a>
+{% endfor %}
+</div>
+{% endblock %}
+
+

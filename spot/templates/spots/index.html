@@ -1,30 +1,319 @@
+
+<!-- 
+Users get a create spot button
+Visitors get a marketing page
+-->
+
+{% if g.user %}
 {% extends 'base.html' %}
 
 
 {% block header %}
-<h1>{% block title %}Spots{% endblock %}</h1>
-{% if g.user %}
-<a class='action' href= "{{ url_for('spots.create') }}">New</a>
-{% endif %}
+<style>   
+	/* Always set the map height explicitly to define the size of the div
+	   * element that contains the map. */
+	  #map {
+	    height: 100%;
+	    background-color: grey;
+	  }
+	  /* Optional: Makes the sample page fill the window. */
+	  html, body, main .container {
+	    height: 100%;
+	    width: 100%;
+	    margin: 0;
+	    padding: 0;
+	  }
+</style>
+{% endblock %}
+
+{% block addbutton %}
+<a id='add-btn' href="{{ url_for('spots.create') }}" class="btn-floating btn-large halfway-fab waves-effect waves-light z-depth-3">
+	<i class="material-icons">add</i>
+</a>
 {% endblock %}
 
 {% block content %}
-{% for spot in spots %}
-<article class = "post">
-	<header>
-		<div>
-			<h2>{{ spot['created'].strftime('%Y-%m-%d  %H:%M') }}</h2>
-			<div class='about'>{{ spot['lat'] }}, {{ spot['long'] }}</div>
-		</div>
-		{% if g.user['id'] == spot['author_id'] %}
-		<a class='action' href="{{ url_for('spots.update', id=spot['id']) }}">Edit</a>
-		{% endif %}
-	</header>
-	<p class='body'>{{ spot['note'] }}</p>
-</article>
-{% if not loop.last %}
-<hr>
-{% endif %}
-{% endfor %}
+<div id="map"></div>
+    <script>
+	    function initMap() {
+	        var map = new google.maps.Map(document.getElementById('map'), {
+	          center: {lat: 25.7850, lng: -80.1583},
+	          zoom: 12,
+	          disableDefaultUI: true,
+	          styles: [
+					  {
+					    "elementType": "geometry",
+					    "stylers": [
+					      {
+					        "color": "#a1a1a1"
+					      }
+					    ]
+					  },
+					  {
+					    "elementType": "labels.icon",
+					    "stylers": [
+					      {
+					        "visibility": "off"
+					      }
+					    ]
+					  },
+					  {
+					    "elementType": "labels.text.fill",
+					    "stylers": [
+					      {
+					        "color": "#616161"
+					      }
+					    ]
+					  },
+					  {
+					    "elementType": "labels.text.stroke",
+					    "stylers": [
+					      {
+					        "color": "#f5f5f5"
+					      }
+					    ]
+					  },
+					  {
+					    "featureType": "administrative",
+					    "elementType": "geometry.stroke",
+					    "stylers": [
+					      {
+					        "color": "#ffffff"
+					      }
+					    ]
+					  },
+					  {
+					    "featureType": "administrative.land_parcel",
+					    "elementType": "labels",
+					    "stylers": [
+					      {
+					        "visibility": "off"
+					      }
+					    ]
+					  },
+					  {
+					    "featureType": "administrative.land_parcel",
+					    "elementType": "labels.text.fill",
+					    "stylers": [
+					      {
+					        "color": "#bdbdbd"
+					      }
+					    ]
+					  },
+					  {
+					    "featureType": "landscape.natural",
+					    "elementType": "geometry.fill",
+					    "stylers": [
+					      {
+					        "color": "#7e7e7e"
+					      }
+					    ]
+					  },
+					  {
+					    "featureType": "poi",
+					    "elementType": "geometry",
+					    "stylers": [
+					      {
+					        "color": "#eeeeee"
+					      }
+					    ]
+					  },
+					  {
+					    "featureType": "poi",
+					    "elementType": "labels.text",
+					    "stylers": [
+					      {
+					        "visibility": "off"
+					      }
+					    ]
+					  },
+					  {
+					    "featureType": "poi",
+					    "elementType": "labels.text.fill",
+					    "stylers": [
+					      {
+					        "color": "#757575"
+					      }
+					    ]
+					  },
+					  {
+					    "featureType": "poi.park",
+					    "elementType": "geometry",
+					    "stylers": [
+					      {
+					        "color": "#e5e5e5"
+					      }
+					    ]
+					  },
+					  {
+					    "featureType": "poi.park",
+					    "elementType": "geometry.fill",
+					    "stylers": [
+					      {
+					        "color": "#7e7e7e"
+					      }
+					    ]
+					  },
+					  {
+					    "featureType": "poi.park",
+					    "elementType": "labels.text.fill",
+					    "stylers": [
+					      {
+					        "color": "#9e9e9e"
+					      }
+					    ]
+					  },
+					  {
+					    "featureType": "road",
+					    "stylers": [
+					      {
+					        "color": "#ffffff"
+					      }
+					    ]
+					  },
+					  {
+					    "featureType": "road",
+					    "elementType": "geometry",
+					    "stylers": [
+					      {
+					        "color": "#ffffff"
+					      }
+					    ]
+					  },
+					  {
+					    "featureType": "road.arterial",
+					    "elementType": "labels.text.fill",
+					    "stylers": [
+					      {
+					        "color": "#757575"
+					      }
+					    ]
+					  },
+					  {
+					    "featureType": "road.highway",
+					    "elementType": "geometry",
+					    "stylers": [
+					      {
+					        "color": "#dadada"
+					      }
+					    ]
+					  },
+					  {
+					    "featureType": "road.highway",
+					    "elementType": "labels.text.fill",
+					    "stylers": [
+					      {
+					        "color": "#616161"
+					      }
+					    ]
+					  },
+					  {
+					    "featureType": "road.local",
+					    "elementType": "labels",
+					    "stylers": [
+					      {
+					        "visibility": "off"
+					      }
+					    ]
+					  },
+					  {
+					    "featureType": "road.local",
+					    "elementType": "labels.text.fill",
+					    "stylers": [
+					      {
+					        "color": "#9e9e9e"
+					      }
+					    ]
+					  },
+					  {
+					    "featureType": "transit.line",
+					    "elementType": "geometry",
+					    "stylers": [
+					      {
+					        "color": "#e5e5e5"
+					      }
+					    ]
+					  },
+					  {
+					    "featureType": "transit.station",
+					    "elementType": "geometry",
+					    "stylers": [
+					      {
+					        "color": "#eeeeee"
+					      }
+					    ]
+					  },
+					  {
+					    "featureType": "water",
+					    "elementType": "geometry",
+					    "stylers": [
+					      {
+					        "color": "#f7f7f7"
+					      }
+					    ]
+					  },
+					  {
+					    "featureType": "water",
+					    "elementType": "labels.text.fill",
+					    "stylers": [
+					      {
+					        "color": "#9e9e9e"
+					      }
+					    ]
+					  }
+					],
+	        });
+	        {% for spot in spots %}
+	        var marker = new google.maps.Marker({
+	        	position: {lat: {{ spot['lat'] }}, lng: {{ spot['lng'] }}},
+	        	url: "{{ url_for('spots.spot', id=spot['id']) }}",
+	        	map: map,
+	        })
+
+	        google.maps.event.addListener(marker, 'click', function() {
+			    window.location.href = this.url;
+			});
+	        {% endfor %}
+	    }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ api_key }}&callback=initMap"
+    async defer></script>
 {% endblock %}
+{% else %}
+<!--Marketing Page-->
+<!doctype html>
+<html>	
+	<head>
+
+		<title>Spots</title>
+		<!--Import Google Icon Font-->
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<!--Materialize CSS and custom CSS-->
+		<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='materialize.css') }}">
+		<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+		<!--Let browser know website is optimized for mobile-->
+      	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	</head>
+	<body>
+		<main style='background-size: cover; background-position: center center; background-image: url({{ url_for("static", filename = "img/home.jpg")}})'>
+			<div class='hero hero-landing' style='margin-top: 33%; text-align: center'>
+				<h2>SpotNotes</h2>
+				<h5>Notes for a time and place.</h5>
+				<div style='padding-top: 1em'>
+					<a href="{{ url_for('auth.register') }}" class='btn waves-effect waves-light center'>Register</a>
+					<a href="{{ url_for('auth.login') }}" class='btn waves-effect waves-light center'>Login</a>
+				</div>
+			</div>
+		</main>
+		<footer class='page-footer'>
+			<div class="footer-copyright">
+		        <div class="container">© 2019 SpotNotes</div>
+	        </div>
+		</footer>
+		<!--Materialize JS and custome JS-->
+		<script src="{{ url_for('static',filename='materialize.js') }}"></script>
+		<script src="{{ url_for('static', filename='scripts.js') }}"></script>
+	</body>
+</html>
+{% endif %}
 

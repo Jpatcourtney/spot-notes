@@ -1,13 +1,64 @@
+
+<!-- 
+Note form field
+Hidden fields for lat and lng
+JS uses "GetCurrentPosition" to ask browser for lat, lng
+JS populates id='loc' once lat, lng received
+-->
 {% extends 'base.html' %}
 
-{% block header %}
-	<h1>{% block title %}New Spot{% endblock %}</h1>
-{% endblock %}
-
 {% block content %}
-	<form method='post'>
-		<label for='note'>Notes</label>
-		<textarea name='note' id='note'>'{{ request.form["note"] }}</textarea>
-		<input type='submit' value='Save This'>
-	</form>
+  <br>
+  <br>
+    <div class='row'>
+      <div class='col s12'>
+        <div class='card-panel'>
+      <div class='row' style='text-align: center'>
+        <div id='loc' style='width: 70%; display: inline-block'>
+          <h6 class='center-align teal-text lighten-3'>Retrieving Location...</h6>
+          <div class="progress">
+            <div class="indeterminate"></div>
+          </div>
+        </div>
+      </div>
+      <div class='row'>
+        <form method='post' class='col s12'>
+          <div class='row'>
+            <div class='input-field col s12'>
+            	<textarea 
+                name='note' 
+                id='note' 
+                class='materialize-textarea'
+                autofocus="autofocus">{{ request.form["note"] }}</textarea>
+            </div>
+            <input type='hidden' name='lat' id='lat'>
+            <input type='hidden' name='lng' id='lng'>
+          	<button type='submit' id='done' class='btn waves-effect waves-light center' disabled>Done</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+    <script>
+    var loc = document.getElementById("loc");
+
+    window.onload = function getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+      } else { 
+        loc.innerHTML = "Geolocation is not supported by this browser.";
+      }
+    }
+
+    function showPosition(position) {
+      var lat = position.coords.latitude;
+      var lng = position.coords.longitude;
+      loc.innerHTML = "<h6 class='teal-text center-align lighten-5'>Lat: " + lat.toFixed(4) + "<br>Lng: " + lng.toFixed(4) + "</h6>";
+      document.getElementById('done').disabled=false;
+      document.getElementById('lat').value=lat;
+      document.getElementById('lng').value=lng;
+    }
+
+    </script>
 {% endblock %}
